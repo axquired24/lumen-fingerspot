@@ -24,14 +24,14 @@ class SyncFingerprint extends Command
      *
      * @var string
      */
-    protected $signature = "fingerprint:sync {--host-api=http://localhost:8000} {--finger-addr=192.168.0.1}";
+    protected $signature = "fingerprint:sync {--host-api=http://localhost:8000} {--finger-addr=192.168.1.201} {--dump}";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = "Sync Fingerprint Data | {--host-api=http://localhost:8000} {--finger-addr=192.168.0.1}";
+    protected $description = "Sync Fingerprint Data | {--host-api=http://localhost:8000} {--finger-addr=192.168.1.201} {--dump}";
 
 
     /**
@@ -43,6 +43,7 @@ class SyncFingerprint extends Command
     {
         $hostApi = $this->option('host-api') . "/";
         $fingerAddr = $this->option('finger-addr');
+        $isDumped = $this->option('dump');
 
         $this->info($this->description);
         $this->info("Syncing Data...");
@@ -51,6 +52,9 @@ class SyncFingerprint extends Command
         $this->info("Fingerprint Address: " .$fingerAddr);
 
         $machine = $this->getDataFromMachine($fingerAddr);
+        if($isDumped) {
+            dd($machine);
+        }
         $fetchedData = $machine["fetched_data"];
         $isEmptyFetchedData = collect($fetchedData)->isEmpty();
         if($machine["is_connected"] && (!$isEmptyFetchedData)) {
@@ -140,7 +144,7 @@ class SyncFingerprint extends Command
             fputs($connect, "Content-Length: ".strlen($soapRequest).$newLine.$newLine);
             fputs($connect, $soapRequest.$newLine);
             $buffer="";
-            while($Response=fgets($connect, 1024)){
+            while($responseData=fgets($connect, 1024)){
                 $buffer=$buffer.$responseData;
             }
 

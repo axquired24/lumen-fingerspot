@@ -24,6 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //
+        $schedule->command("fingerprint:sync --host-api=http://localhost:8000 --finger-addr=192.168.1.201")
+            ->everyMinute()
+            ->withoutOverlapping();
     }
 }
