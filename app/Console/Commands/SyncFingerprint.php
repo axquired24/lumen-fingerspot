@@ -24,14 +24,14 @@ class SyncFingerprint extends Command
      *
      * @var string
      */
-    protected $signature = "fingerprint:sync {--host-api=http://localhost:8000} {--finger-addr=192.168.1.201} {--dump}";
+    protected $signature = "fingerprint:sync {--dump}";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = "Sync Fingerprint Data | {--host-api=http://localhost:8000} {--finger-addr=192.168.1.201} {--dump}";
+    protected $description = "Sync Fingerprint Data | {--dump}";
 
 
     /**
@@ -41,8 +41,11 @@ class SyncFingerprint extends Command
      */
     public function handle()
     {
-        $hostApi = $this->option('host-api') . "/";
-        $fingerAddr = $this->option('finger-addr');
+        $fingerAddr = env("FINGERPRINT_IP", "127.0.0.1");
+        $hostApi = env("CLOUD_HOST", "http://localhost");
+
+        // $hostApi = $this->option('host-api') . "/";
+        // $fingerAddr = $this->option('finger-addr');
         $isDumped = $this->option('dump');
 
         $this->info($this->description);
